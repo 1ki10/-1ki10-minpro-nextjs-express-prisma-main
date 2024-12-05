@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  role          String    @default("user")  // "user" atau "organizer"
+  referralCode  String?   @unique
+  points        Int       @default(0)
+  pointsExpiry  DateTime?
+  
+  events        Event[]   // Events yang dibuat user (sebagai organizer)
+  tickets       Ticket[]  // Tickets yang dibeli user
+  reviews       Review[]  // Reviews yang dibuat user
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Event {
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  date            String
+  time            String
+  location        String
+  locationType    String    @default("physical")
+  category        String    @default("general")
+  isFree          Boolean   @default(false)
+  price           Float     @default(0)
+  seats           Int
+  availableSeats  Int
+  ticketLimit     Int?
+  discounts       Json?
+  status          String    @default("draft")
+  organizerId     String?
+  organizer       User?     @relation(fields: [organizerId], references: [id])  // Uncomment ini
+  
+  tickets         Ticket[]
+  reviews         Review[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+
+model Ticket {
+  id          String    @id @default(cuid())
+  eventId     String
+  event       Event     @relation(fields: [eventId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  quantity    Int
+  totalPrice  Float
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  eventId     String
+  event       Event     @relation(fields: [eventId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  rating      Int
+  feedback    String
+  createdAt   DateTime  @default(now())
+}
+
+model Sample {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

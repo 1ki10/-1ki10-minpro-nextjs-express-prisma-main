@@ -10,13 +10,17 @@ import type { DiscountFormData } from '@/types/discount';
 const discountSchema = z.object({
   earlyBird: z.object({
     enabled: z.boolean(),
-    percentage: z.number().min(0).max(100),
-    endDate: z.string().min(1, { message: 'End date is required' })
+    percentage: z.number().min(0).max(100).optional(),
+    endDate: z.string().optional()
+  }).refine(data => !data.enabled || (data.percentage && data.endDate), {
+    message: "Percentage and end date required when enabled"
   }),
   lastMinute: z.object({
     enabled: z.boolean(),
-    percentage: z.number().min(0).max(100),
-    startDate: z.string().min(1, { message: 'Start date is required' })
+    percentage: z.number().min(0).max(100).optional(),
+    startDate: z.string().optional()
+  }).refine(data => !data.enabled || (data.percentage && data.startDate), {
+    message: "Percentage and start date required when enabled"
   })
 });
 

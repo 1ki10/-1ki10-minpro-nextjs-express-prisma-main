@@ -67,14 +67,6 @@ export interface CreateEventPayload {
   status: 'draft';
 }
 
-export interface EventsResponse {
-  events: Event[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 export interface EventFilters {
   search?: string;
   category?: string;

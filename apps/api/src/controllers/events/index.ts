@@ -1,4 +1,3 @@
-// src/controllers/events/index.ts
 import { Request, Response } from 'express';
 import { prisma } from '../../prisma';
 import { Prisma } from '@prisma/client';
@@ -9,7 +8,6 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-// Fungsi getAllEvents
 const getAllEvents = async (req: Request, res: Response) => {
   try {
     const events = await prisma.event.findMany({
@@ -37,7 +35,43 @@ const getAllEvents = async (req: Request, res: Response) => {
   }
 };
 
-// Fungsi createEvent
+const getEventById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    
+    const event = await prisma.event.findUnique({
+      where: { id },
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      return res.json({
+        success: false,
+        message: 'Event not found'
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: event
+    });
+  } catch (error) {
+    console.error('Error fetching event:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch event'
+    });
+  }
+};
+
 const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const {
@@ -99,5 +133,5 @@ const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-// Export kedua fungsi
-export { getAllEvents, createEvent };
+// Export semua fungsi
+export { getAllEvents, getEventById, createEvent };

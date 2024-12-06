@@ -16,11 +16,11 @@ model User {
   referralCode  String?   @unique
   points        Int       @default(0)
   pointsExpiry  DateTime?
-  
+
   events        Event[]   // Events yang dibuat user (sebagai organizer)
   tickets       Ticket[]  // Tickets yang dibeli user
   reviews       Review[]  // Reviews yang dibuat user
-  
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -43,14 +43,13 @@ model Event {
   status          String    @default("draft")
   organizerId     String?
   organizer       User?     @relation(fields: [organizerId], references: [id])  // Uncomment ini
-  
+
   tickets         Ticket[]
   reviews         Review[]
-  
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
-
 
 model Ticket {
   id          String    @id @default(cuid())

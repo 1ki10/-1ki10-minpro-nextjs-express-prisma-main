@@ -29,11 +29,9 @@ export function EventFormWrapper({ onComplete }: { onComplete: (data: FormData) 
     store.setCurrentStep('discounts');
   };
 
-  // Ubah handleDiscountSubmit untuk langsung menampilkan dialog
   const handleDiscountSubmit = (data: any) => {
     store.saveDiscounts(data);
-    setShowConfirm(true); // Tampilkan dialog konfirmasi
-    // Hilangkan perpindahan step
+    setShowConfirm(true);
   };
 
   const handleConfirm = async () => {
@@ -52,13 +50,13 @@ export function EventFormWrapper({ onComplete }: { onComplete: (data: FormData) 
     <>
       <div className="space-y-6">
         {store.currentStep === 'basic' && (
-          <BasicInfoForm initialData={store.basic} onSubmit={handleBasicSubmit} />
+          <BasicInfoForm onSubmit={handleBasicSubmit} />
         )}
         {store.currentStep === 'tickets' && (
-          <TicketForm initialData={store.tickets} onSubmit={handleTicketSubmit} />
+          <TicketForm onSubmit={handleTicketSubmit} />
         )}
         {store.currentStep === 'discounts' && (
-          <DiscountForm initialData={store.discounts} onSubmit={handleDiscountSubmit} />
+          <DiscountForm onSubmit={handleDiscountSubmit} />
         )}
       </div>
 

@@ -1,7 +1,7 @@
 import { api } from '../api/axios';
 import { ApiResponse } from '@/types/common/api';
-import { Event, EventFilters } from '@/types/event';
-import { ApiEventsResponse } from '@/types/events-response';
+import { Event } from '@/types/event';
+import { ApiEventsResponse, EventFilters } from '@/types/events-response'; // Import EventFilters dari sini
 
 export async function getEvents(
   params: EventFilters & { page?: number; limit?: number }

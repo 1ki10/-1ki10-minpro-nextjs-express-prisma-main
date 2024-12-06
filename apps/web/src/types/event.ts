@@ -30,6 +30,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
+  image?: string;
   date: string;
   time: string;
   location: string;
@@ -40,7 +41,6 @@ export interface Event {
   seats: number;
   availableSeats: number;
   ticketLimit?: number;
-  image?: string;
   discounts: ApiDiscount;
   status: 'draft' | 'published';
   organizerId: string;

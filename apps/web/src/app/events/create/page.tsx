@@ -14,7 +14,7 @@ export default function CreateEventPage() {
   const handleComplete = async (formData: FormData) => {
     try {
       setIsSubmitting(true);
-      const response = await createEvent(formData);
+      const response = await createEvent(formData); // Kirim FormData langsung
 
       if (response.success) {
         toast.success('Event created successfully');

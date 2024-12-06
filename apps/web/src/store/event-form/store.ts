@@ -84,7 +84,11 @@ export const useEventFormStore = create<EventFormState>()(
         formStatus: { ...state.formStatus, ...status }
       })),
 
-      resetForm: () => set(initialState),
+      // Modifikasi resetForm untuk membersihkan storage
+      resetForm: () => {
+        set(initialState);
+        window.localStorage.removeItem('event-form'); // Hapus data dari localStorage
+      },
 
       getFormData: () => {
         const state = get();
@@ -97,6 +101,8 @@ export const useEventFormStore = create<EventFormState>()(
     }),
     {
       name: 'event-form',
+      // Tambahkan version untuk force clear storage
+      version: 1,
       partialize: (state) => ({
         basic: state.basic,
         tickets: state.tickets,

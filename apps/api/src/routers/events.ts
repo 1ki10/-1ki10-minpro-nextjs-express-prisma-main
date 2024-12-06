@@ -1,15 +1,15 @@
+// src/routers/events.ts
 import { Router } from 'express';
 import { validateEventInput } from '../middleware/validation';
-import { createEvent } from '../controllers/events';
+import { getAllEvents, createEvent, getEventById } from '../controllers/events';
 import { isAuthenticated } from '../middleware/auth';
 import { isOrganizer } from '../middleware/roles';
 
 const router = Router();
 
 // Public routes
-router.get('/', (req, res) => {
-  res.json({ message: 'Events list endpoint' });
-});
+router.get('/', getAllEvents);
+router.get('/:id', getEventById);  // Pindahkan ke public routes
 
 // Protected routes
 router.use(isAuthenticated);

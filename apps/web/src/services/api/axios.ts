@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { apiConfig } from '@/config/api';
 
-// Set default token untuk development
-const DEFAULT_TOKEN = 'org-001'; // Sesuaikan dengan ID organizer yang sudah dibuat
+const DEFAULT_TOKEN = 'org-001';
 
 export const api = axios.create({
-  baseURL: apiConfig.baseUrl || 'http://localhost:3001/api',
-  timeout: apiConfig.timeout || 15000,
-  headers: apiConfig.headers
+  baseURL: 'http://localhost:3001/api',  // Pastikan ini selalu ke port 3001
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 // Request interceptor

@@ -10,5 +10,6 @@ config({ path: resolve(__dirname, `../${envFile}.local`), override: true });
 
 // Load all environment variables from .env file
 
-export const PORT = process.env.PORT || 3001;
+export const PORT = process.env.PORT || 3001; // Ganti 3001 dengan 3002 atau port lain yang belum digunakan
+
 export const DATABASE_URL = process.env.DATABASE_URL || '';

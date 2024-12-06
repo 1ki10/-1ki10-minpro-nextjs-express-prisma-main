@@ -1,3 +1,4 @@
+// src/controllers/events/index.ts
 import { Request, Response } from 'express';
 import { prisma } from '../../prisma';
 import { Prisma } from '@prisma/client';
@@ -8,19 +9,35 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-interface DiscountInfo {
-  earlyBird?: {
-    enabled: boolean;
-    percentage: number;
-    endDate: string;
-  };
-  lastMinute?: {
-    enabled: boolean;
-    percentage: number;
-    startDate: string;
-  };
-}
+// Fungsi getAllEvents
+const getAllEvents = async (req: Request, res: Response) => {
+  try {
+    const events = await prisma.event.findMany({
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
 
+    return res.json({
+      success: true,
+      data: events
+    });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch events'
+    });
+  }
+};
+
+// Fungsi createEvent
 const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const {
@@ -35,26 +52,9 @@ const createEvent = async (req: AuthenticatedRequest, res: Response) => {
       price = 0,
       seats,
       ticketLimit,
-      discounts,
     } = req.body;
 
-    // Transform discounts jika ada
-    const transformedDiscounts = discounts ? {
-      earlyBird: discounts.earlyBird?.enabled 
-        ? {
-            percentage: Number(discounts.earlyBird.percentage),
-            endDate: discounts.earlyBird.endDate
-          }
-        : null,
-      lastMinute: discounts.lastMinute?.enabled
-        ? {
-            percentage: Number(discounts.lastMinute.percentage),
-            startDate: discounts.lastMinute.startDate
-          }
-        : null
-    } : Prisma.JsonNull;
-
-    const eventData: Prisma.EventCreateInput = {
+    const eventData = {
       title: title.trim(),
       description: description.trim(),
       date,
@@ -67,13 +67,8 @@ const createEvent = async (req: AuthenticatedRequest, res: Response) => {
       seats: Number(seats),
       availableSeats: Number(seats),
       ticketLimit: ticketLimit ? Number(ticketLimit) : null,
-      discounts: transformedDiscounts, // Gunakan transformedDiscounts
       status: 'draft',
-      organizer: {
-        connect: {
-          id: req.user?.id || 'org-001'
-        }
-      }
+      organizerId: req.user?.id
     };
 
     const event = await prisma.event.create({
@@ -97,26 +92,12 @@ const createEvent = async (req: AuthenticatedRequest, res: Response) => {
 
   } catch (error: any) {
     console.error('Error creating event:', error);
-    
-    if (error.code === 'P2002') {
-      return res.status(400).json({
-        success: false,
-        message: 'An event with this title already exists'
-      });
-    }
-    
-    if (error.code === 'P2003') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid organizer ID'
-      });
-    }
-
     return res.status(500).json({
       success: false,
-      message: 'Failed to create event. Please try again later.'
+      message: 'Failed to create event'
     });
   }
 };
 
-export { createEvent };
+// Export kedua fungsi
+export { getAllEvents, createEvent };

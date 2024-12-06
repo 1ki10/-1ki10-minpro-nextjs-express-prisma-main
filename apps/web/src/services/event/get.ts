@@ -1,10 +1,11 @@
 import { api } from '../api/axios';
 import { ApiResponse } from '@/types/common/api';
-import { Event, EventsResponse, EventFilters } from '@/types/event';
+import { Event, EventFilters } from '@/types/event';
+import { ApiEventsResponse } from '@/types/events-response';
 
 export async function getEvents(
   params: EventFilters & { page?: number; limit?: number }
-): Promise<ApiResponse<EventsResponse>> {
+): Promise<ApiEventsResponse> {
   const response = await api.get('/events', { params });
   return response.data;
 }

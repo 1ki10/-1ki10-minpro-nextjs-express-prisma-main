@@ -8,6 +8,12 @@ export interface EventsResponse {
   totalPages: number;
 }
 
+export interface ApiEventsResponse {
+  success: boolean;
+  message?: string;
+  data: Event[];
+}
+
 export interface EventFilters {
   search?: string;
   category?: string;
